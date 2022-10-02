@@ -12,8 +12,8 @@ const port = 8080;
 
 // load scss in project
 app.use(sassMiddleware({
-    src: path.join(__dirname, 'assets', 'scss'),
-    dest: path.join(__dirname, 'assets', 'css'),
+    src: path.join(__dirname, './assets', 'scss'),
+    dest: path.join(__dirname, './assets', 'css'),
     debug: true,
     outputStyle: 'expanded',
     prefix: '/css'
