@@ -36,9 +36,34 @@
     - created a signout button in home.
 
 ********************************************** write logic for google-auth **********************************************
-
+- Install passport-google-auth
+- install crypto
+- create a strategy config file
+- create a new router.get for google auth
+- link this router to login and signup page
 
 ********************************************** logic Reset password  **********************************************
+    - install nodemailer
+    - create a new model -> model/UserAccessToken.js
+    - config this nodemailer -> config/nodemailer
+    - create a mailer files -> mailers/reset_pass_mailer.js
+    - create template for reset-mail -> views/mailers/reset_password_temp.ejs
+    - create some new views
+        - invalid
+        - reset_pass_link_sent
+        - reset_password_page
+        - update_password
+    - create auth controller functions and routers
+        - render reset password page
+        - generate access token
+        - verify access token'
+        - update password
+    - features
+        - a link can be used for only one time password update
+        - a link will be expired after 5 mins
+    
+    
+    
     - try to use modals / bootstrap
     - enter username in that modal
     - after clicking on submit button nodemailer will send a mail to user with random link (with expiration date)
