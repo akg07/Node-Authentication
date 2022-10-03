@@ -61,10 +61,11 @@
     - features
         - a link can be used for only one time password update
         - a link will be expired after 5 mins
-    
-    
-    
-    - try to use modals / bootstrap
-    - enter username in that modal
-    - after clicking on submit button nodemailer will send a mail to user with random link (with expiration date)
+
+***************************************************** Update Password After Login *****************************************************
+- create a link in profile for update password
+- ask for password, again
+    - if google user then pass
+    - if normal user than ask for password or forgot password
+- ask for password and confirm password
 
