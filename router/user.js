@@ -1,9 +1,11 @@
 const express = require('express');
 const router = express.Router();
+const passport = require('passport');
 
 const userController = require('../controllers/userController');
 
-router.get('/login_page', userController.render_login_page);
-router.get('/signup_page', userController.render_signup_page);
+
+router.get('/profile', userController.render_profile_page);
+
 
 module.exports = router;

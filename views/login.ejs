@@ -15,12 +15,12 @@
 
     <div class="right">
         <h5>Login</h5>
-        <p>Don't have an account? <a href="/users/signup_page">Create a new Account</a></p>
-        <form action="#" method="post">
+        <p>Don't have an account? <a href="/auth/signup_page">Create a new Account</a></p>
+        <form action="/auth/create_session" method="post">
             <div class="inputs">
-                <input type="text" placeholder="UserName">
+                <input type="email " placeholder="email" name="email">
                 <br>
-                <input type="password" placeholder="Password">
+                <input type="password" placeholder="Password" name="password">
             </div>
             <br><br>
 

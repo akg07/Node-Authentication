@@ -5,13 +5,15 @@
         <h5>Sign Up</h5>
         
         
-        <form action="#" method="post">
+        <form action="/auth/create_new" method="post">
             <div class="inputs">
-                <input type="text" placeholder="User name">
+                <input type="text" placeholder="name" name="name">
                 <br>
-                <input type="password" placeholder="Password">
+                <input type="email" placeholder="email" name="email">
                 <br>
-                <input type="password" placeholder="Confirm password">
+                <input type="password" placeholder="Password" name="password">
+                <br>
+                <input type="password" placeholder="Confirm password" name="confirm_password">
                 
             </div>
             <br>
@@ -26,7 +28,7 @@
         </span>
 
         <span class="login-btn">
-            <a href="/users/login_page">Login?</a>
+            <a href="/auth/login_page">Login?</a>
         </span>
     </div>
 

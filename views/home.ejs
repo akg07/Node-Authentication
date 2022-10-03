@@ -1,5 +1,17 @@
 <link rel="stylesheet" href="css/home.css">
 
+
 <div id="title">
     <%= title %>
+</div>
+
+
+<div>
+    <% if(locals.user) { %>
+        <span><%= user.name %></span>
+        <a href="/auth/sign-out">Sign Out</a>
+    <% } else { %>
+        <a href="/auth/login_page"></a>
+        <a href="/auth/signup_page"></a>
+    <% } %>
 </div>
