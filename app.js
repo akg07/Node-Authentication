@@ -11,6 +11,7 @@ const db = require('./configs/mongoose'); // get database instance
 const session = require('express-session');
 const passport = require('passport');
 const passportLocal = require('./configs/passport-local-strategy');
+const googlePassport = require('./configs/passport-google-oauth');
 const MongoStore = require('connect-mongo');
 
 const cookieParser = require('cookie-parser');
