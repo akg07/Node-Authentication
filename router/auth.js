@@ -21,6 +21,9 @@ router.post('/generate_accessToken', authController.generate_access_token);
 router.get('/verify_key/:id', authController.verifyAccessToken);
 router.post('/update_password', authController.update_password);
 
+router.get('/render_pass', passport.checkAuthentication, authController.render_password_page);
+router.post('/verify_user', authController.verify_user);
+
 router.get('/google', passport.authenticate('google', {scope: ['profile', 'email']}));
 router.get('/google/callback', passport.authenticate('google', {failureRedirect: '/auth/login_page'}), authController.create_session_passport_Auth)
 

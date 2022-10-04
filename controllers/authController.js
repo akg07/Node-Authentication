@@ -18,7 +18,7 @@ module.exports.render_login_page = function(req, res) {
     
     // if user is signed in don't show login page
     if(req.isAuthenticated()) {
-        return res.redirect('/users/profile');
+        return res.redirect('/home');
     }
     
     return res.render('login');
@@ -27,7 +27,7 @@ module.exports.render_login_page = function(req, res) {
 module.exports.render_signup_page = function(req, res) {
     // if user is signed in don't show signup page
     if(req.isAuthenticated()) {
-        return res.redirect('/users/profile');
+        return res.redirect('/home');
     }
     
     // console.log(req.cookies);
@@ -102,7 +102,7 @@ module.exports.create_session_mannual_Auth = function(req, res) {
 }
 
 module.exports.create_session_passport_Auth = function(req, res) {
-    return res.redirect('/users/profile');
+    return res.redirect('/home');
 }
 
 module.exports.distroy_session = function(req, res) {
@@ -112,7 +112,7 @@ module.exports.distroy_session = function(req, res) {
             console.log(err || 'Logged out from session');
         }
         // req.flash('success', 'See you soon :-)');
-        return res.redirect('/home'); // redirect user to home
+        return res.redirect('/auth/login_page'); // redirect user to home
     }); 
 }
 
@@ -180,16 +180,47 @@ module.exports.verifyAccessToken = async function(req, res) {
 }
 
 module.exports.update_password = async function(req, res) {
+
+    console.log('email', req.body.email);
+    console.log('password', req.body.password);
+
     if(req.body.password == req.body.confirm_password) {
 
         let user = await User.findOneAndUpdate({email: req.body.email},{password: req.body.password});
         
         if(user) {
-            console.log('req body accessToken ' ,req.body.accessToken)
-            await UserAT.findOneAndUpdate({accessToken: req.body.accessToken}, {isValid: false});
-            return res.render('login');
+            if(req.body.isLogged == 1) await UserAT.findOneAndUpdate({accessToken: req.body.accessToken}, {isValid: false});
+            return res.redirect('/home');
         }
     }else {
         return;
     }
+}
+
+module.exports.render_password_page = function(req, res) {
+    res.render('ask_password', {title: 'ask password'});
+}
+
+module.exports.verify_user = function(req, res) {
+    
+
+    User.findOne({email: req.body.email}, function(err, user) {
+        if(err) {
+            console.log('error at finding user in verify user: ', err);
+            return;
+        }
+
+        if(user) {
+            if(user.password != req.body.password) {
+                console.log('Invalid user / password')
+                return res.redirect('back');
+            }else{
+                return res.render('update_password_logged', {user: user});
+            }
+
+        }else {
+            console.log('user not found');
+            return res.redirect('back');
+        }
+    });
 }

@@ -5,7 +5,7 @@ const passport = require('passport');
 const userController = require('../controllers/userController');
 
 
-router.get('/profile', userController.render_profile_page);
+router.get('/profile/:id', userController.render_profile_page);
 
 
 module.exports = router;
