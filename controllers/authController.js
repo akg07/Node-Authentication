@@ -57,7 +57,8 @@ module.exports.create_new_user = function(req, res) {
                     console.log('error at finding user: ', err);
                     return;
                 }
-
+                
+                req.flash('success', 'New User Created');
                 return res.redirect('/auth/login_page');
             });
         }
@@ -102,6 +103,8 @@ module.exports.create_session_mannual_Auth = function(req, res) {
 }
 
 module.exports.create_session_passport_Auth = function(req, res) {
+    req.flash('success', 'Welcome ');
+
     return res.redirect('/home');
 }
 
@@ -111,7 +114,8 @@ module.exports.distroy_session = function(req, res) {
         if(err) {
             console.log(err || 'Logged out from session');
         }
-        // req.flash('success', 'See you soon :-)');
+
+        req.flash('success', 'See you soon');
         return res.redirect('/auth/login_page'); // redirect user to home
     }); 
 }
@@ -137,6 +141,7 @@ module.exports.generate_access_token = async function(req, res) {
 
             passwordMailer.resetPassword(userWithAT);
 
+            req.flash('success', 'Link sent');
             return res.render('reset_pass_link_sent');
         }
 
@@ -190,6 +195,7 @@ module.exports.update_password = async function(req, res) {
         
         if(user) {
             if(req.body.isLogged == 1) await UserAT.findOneAndUpdate({accessToken: req.body.accessToken}, {isValid: false});
+            req.flash('success', 'password updated');
             return res.redirect('/home');
         }
     }else {
@@ -198,7 +204,7 @@ module.exports.update_password = async function(req, res) {
 }
 
 module.exports.render_password_page = function(req, res) {
-    res.render('ask_password', {title: 'ask password'});
+    res.render('ask_password');
 }
 
 module.exports.verify_user = function(req, res) {
@@ -212,14 +218,15 @@ module.exports.verify_user = function(req, res) {
 
         if(user) {
             if(user.password != req.body.password) {
-                console.log('Invalid user / password')
+                req.flash('error', 'Wrong Password');
                 return res.redirect('back');
             }else{
+                req.flash('success', 'user verified');
                 return res.render('update_password_logged', {user: user});
             }
 
         }else {
-            console.log('user not found');
+            req.flash('error', 'user not found');
             return res.redirect('back');
         }
     });

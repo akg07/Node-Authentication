@@ -69,3 +69,12 @@
     - if normal user than ask for password or forgot password
 - ask for password and confirm password
 
+
+************************************************* Add Notification ***********************************************************
+- install connect-flash
+- create config
+- add link and script for noty in layout.ejs
+- add noty in layout.ejs
+- add req.flash in all required controllers and local-auth-strategy
+
+*********************************************************** Encrypt password in mongodb *******************************************
