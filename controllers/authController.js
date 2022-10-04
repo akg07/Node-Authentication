@@ -57,7 +57,8 @@ module.exports.create_new_user = function(req, res) {
                     console.log('error at finding user: ', err);
                     return;
                 }
-
+                
+                req.flash('success', 'New User Created');
                 return res.redirect('/auth/login_page');
             });
         }
@@ -140,6 +141,7 @@ module.exports.generate_access_token = async function(req, res) {
 
             passwordMailer.resetPassword(userWithAT);
 
+            req.flash('success', 'Link sent');
             return res.render('reset_pass_link_sent');
         }
 
@@ -193,6 +195,7 @@ module.exports.update_password = async function(req, res) {
         
         if(user) {
             if(req.body.isLogged == 1) await UserAT.findOneAndUpdate({accessToken: req.body.accessToken}, {isValid: false});
+            req.flash('success', 'password updated');
             return res.redirect('/home');
         }
     }else {
@@ -215,9 +218,10 @@ module.exports.verify_user = function(req, res) {
 
         if(user) {
             if(user.password != req.body.password) {
-                req.flash('error', 'Invalid user / password')
+                req.flash('error', 'Wrong Password');
                 return res.redirect('back');
             }else{
+                req.flash('success', 'user verified');
                 return res.render('update_password_logged', {user: user});
             }
 
