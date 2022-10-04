@@ -69,3 +69,6 @@
     - if normal user than ask for password or forgot password
 - ask for password and confirm password
 
+
+************************************************* Add Notification ***********************************************************
+- install connect-flash
