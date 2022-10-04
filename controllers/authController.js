@@ -102,6 +102,8 @@ module.exports.create_session_mannual_Auth = function(req, res) {
 }
 
 module.exports.create_session_passport_Auth = function(req, res) {
+    req.flash('success', 'Welcome ');
+
     return res.redirect('/home');
 }
 
@@ -111,7 +113,8 @@ module.exports.distroy_session = function(req, res) {
         if(err) {
             console.log(err || 'Logged out from session');
         }
-        // req.flash('success', 'See you soon :-)');
+
+        req.flash('success', 'See you soon');
         return res.redirect('/auth/login_page'); // redirect user to home
     }); 
 }
@@ -198,7 +201,7 @@ module.exports.update_password = async function(req, res) {
 }
 
 module.exports.render_password_page = function(req, res) {
-    res.render('ask_password', {title: 'ask password'});
+    res.render('ask_password');
 }
 
 module.exports.verify_user = function(req, res) {
@@ -212,14 +215,14 @@ module.exports.verify_user = function(req, res) {
 
         if(user) {
             if(user.password != req.body.password) {
-                console.log('Invalid user / password')
+                req.flash('error', 'Invalid user / password')
                 return res.redirect('back');
             }else{
                 return res.render('update_password_logged', {user: user});
             }
 
         }else {
-            console.log('user not found');
+            req.flash('error', 'user not found');
             return res.redirect('back');
         }
     });
