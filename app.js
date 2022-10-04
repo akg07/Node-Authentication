@@ -3,7 +3,7 @@ const path = require('path');
 const expressLayouts = require('express-ejs-layouts'); // creating partials and layout for FE
 const nocache = require("nocache"); // restrict browser to go back after clicking on login & logout, must -revalidate
 const flash = require('connect-flash');
-const notyMiddleware = require('./configs/noty');
+const connectFlashMiddleware = require('./configs/connectFlashMiddleware');
 
 // middleware: provide functinality to write css code in sass form
 const sassMiddleware = require('node-sass-middleware');
@@ -69,7 +69,7 @@ app.use(passport.session());
 app.use(passport.setAuthenticatedUser); // set current user as a locals
 
 app.use(flash());
-app.use(notyMiddleware.setFlash);
+app.use(connectFlashMiddleware.setFlash);
 
 
 // call parent router
