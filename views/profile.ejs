@@ -1,6 +1,27 @@
+<link rel="stylesheet" href="/css/profile.css">
+
+<div class="profile-container">
+    <div class="heading">
+        <span class="name"><%= user.name %></span>
+        <span class="email"><%= user.email %></span>
+    </div>
+
+    <div class="btn-container">
+        <div class="btn btn-home">
+            <a href="/home">Home</a>
+        </div>
+        
+        <div class="btn btn-u-pass">
+            <a href="/auth/render_pass">Update Password</a>
+        </div>
+    </div>
+</div>
+
+
+<!-- 
 <h1>Profile page</h1>
 
 <%= user.name %>
 <%= user.email %>
 
-<a href="/home">Home page</a>
+<a href="/home">Home page</a> -->
