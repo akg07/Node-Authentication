@@ -15,7 +15,7 @@ passport.use(new LocalStrategy({
                 return done(err);
             }
 
-            if(!user || user.password != password) {
+            if(!user || user.notMatch(password)) {
                 // console.log('Invalid user / password');
                 req.flash('error', 'Invalid user / password')
                 return done(null, false); // there is no error but user is not found -> false

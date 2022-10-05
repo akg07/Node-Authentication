@@ -37,35 +37,42 @@ module.exports.render_signup_page = function(req, res) {
 }
 
 // sign up new user
-module.exports.create_new_user = function(req, res) {
+module.exports.create_new_user = async function(req, res) {
 
     console.log(req.body.email);
-
-    if(req.body.password != req.body.confirm_password) {
-        return res.redirect('back');
-    }
-
-    User.findOne({email: req.body.email}, function(err, user) {
-        if(err) {
-            console.log('error at finding user: ', err);
-            return;
+    try{
+        if(req.body.password != req.body.confirm_password) {
+            return res.redirect('back');
         }
-
+        
+        let user = await User.findOne({email: req.body.email});
         if(!user) {
-            User.create(req.body, function(err, user) {
-                if(err) {
-                    console.log('error at finding user: ', err);
-                    return;
-                }
+
+            let newUser = new User();
+
+            newUser.name = req.body.name;
+            newUser.email = req.body.email;
+            newUser.setPassword(req.body.password);
+
+            newUser.save((err, User) => {
                 
-                req.flash('success', 'New User Created');
-                return res.redirect('/auth/login_page');
+                if(err) {
+                    console.log('error at saving new user ', err);
+                    return res.redirect('back'); 
+                }else {
+                    req.flash('success', 'New User Created');
+                    return res.redirect('/auth/login_page');
+                }
             });
         }
         else {
             return res.redirect('back');
         }
-    });
+    }catch(err){
+        return res.redirect('back');
+
+    }
+
 }
 
 /* 
@@ -141,7 +148,6 @@ module.exports.generate_access_token = async function(req, res) {
 
             passwordMailer.resetPassword(userWithAT);
 
-            req.flash('success', 'Link sent');
             return res.render('reset_pass_link_sent');
         }
 
@@ -191,7 +197,16 @@ module.exports.update_password = async function(req, res) {
 
     if(req.body.password == req.body.confirm_password) {
 
-        let user = await User.findOneAndUpdate({email: req.body.email},{password: req.body.password});
+        // let user = await User.findOneAndUpdate({email: req.body.email},{password: req.body.password});
+        let user = await User.findOne({email: req.body.email});
+        user.setPassword(req.body.password);
+
+        user.save((err, User) => {
+            if(err){
+                console.log('error at updaing password');
+                return redirect('back');
+            }
+        });
         
         if(user) {
             if(req.body.isLogged == 1) await UserAT.findOneAndUpdate({accessToken: req.body.accessToken}, {isValid: false});
@@ -217,7 +232,7 @@ module.exports.verify_user = function(req, res) {
         }
 
         if(user) {
-            if(user.password != req.body.password) {
+            if(user.notMatch(req.body.password)) {
                 req.flash('error', 'Wrong Password');
                 return res.redirect('back');
             }else{

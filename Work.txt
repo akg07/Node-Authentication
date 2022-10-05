@@ -1,4 +1,4 @@
-********************************************** Task **********************************************
+********************************************** Initial Task **********************************************
 
 - Setup the application base
 
@@ -78,3 +78,11 @@
 - add req.flash in all required controllers and local-auth-strategy
 
 *********************************************************** Encrypt password in mongodb *******************************************
+- update User schema
+    - add salt & hash property
+    - add setPassword method
+    - add norMatch method
+- update local-auth-strategy config
+- update auth controller
+    - create a new User
+    - update password
