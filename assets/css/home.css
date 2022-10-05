@@ -1,3 +1,30 @@
-#title {
-  border: 1px solid red;
+#home-container {
+  padding: 10px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+#home-container #title span {
+  font-size: 30px;
+}
+
+#home-container #btns {
+  width: 250px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 5px;
+}
+
+#home-container #btns .btn {
+  color: white;
+}
+
+#home-container #btns .profile-btn {
+  background-color: blueviolet;
+}
+
+#home-container #btns .signout-btn {
+  background-color: red;
 }
