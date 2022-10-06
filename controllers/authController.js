@@ -5,12 +5,11 @@ const passwordMailer = require('../mailers/reset_pass_mailer'); // get nodemaile
 
 /* *****************************************************************************************************
     these libraries is being used for getting long datatype 
-    this long datatype is being used in creating encrypted password 
-***************************************************************************************************** 
+    this long datatype is being used in expiry time for access token link
+***************************************************************************************************** */
 const mongoose = require('mongoose'); // get mongoose instance
 require('mongoose-long')(mongoose); // require mongoose-long
 const {Types: {Long}} = mongoose; // get Long datatype for mongodb
-*/
 
 /* *****************************************************************************************************
     Render login page on req

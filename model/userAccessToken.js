@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require('mongoose'); // get instance of mongoose
 require('mongoose-long')(mongoose);
 const {Types: {Long}} = mongoose;
 
