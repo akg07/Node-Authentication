@@ -26,11 +26,11 @@
 }
 
 .profile-container .btn-container {
-  padding: 10px;
+  padding: 10px 5px;
   display: flex;
   flex-direction: row;
-  width: 20%;
-  justify-content: space-between;
+  width: 30%;
+  justify-content: end;
 }
 
 .profile-container .btn-container .btn a {
@@ -46,4 +46,8 @@
 
 .profile-container .btn-container .btn-u-pass a {
   background-color: #c6851c;
+}
+
+.profile-container .btn-container .btn-signout a {
+  background-color: red;
 }

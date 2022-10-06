@@ -1,6 +1,10 @@
-const passport = require('passport');
-const LocalStrategy = require('passport-local').Strategy;
-const User = require('../model/user');
+//  This startegy is written by Aayush Kumar Gupta
+
+// passport-local authentication , User Input authentication
+
+const passport = require('passport'); // get instance of passport
+const LocalStrategy = require('passport-local').Strategy; // local-auth startegy
+const User = require('../model/user'); // User schema
 
 
 // Authentication using passport
@@ -8,6 +12,7 @@ passport.use(new LocalStrategy({
         usernameField: 'email',
         passReqToCallback: true
     }, function(req, email, password, done) {
+
         // find the user and establish connection
         User.findOne({email: email}, function(err, user) {
             if(err) {
@@ -15,8 +20,7 @@ passport.use(new LocalStrategy({
                 return done(err);
             }
 
-            if(!user || user.password != password) {
-                // console.log('Invalid user / password');
+            if(!user || user.notMatch(password)) {
                 req.flash('error', 'Invalid user / password')
                 return done(null, false); // there is no error but user is not found -> false
             }
@@ -55,15 +59,16 @@ passport.checkAuthentication = function(req, res, next) {
     return res.redirect('/auth/login_page');
 }
 
+// If there is a user logged In : Set this user as local user
 passport.setAuthenticatedUser = function(req, res, next) {
     if(req.isAuthenticated()) {
         // req.user contains current signed user from the sessio cookie
         res.locals.user = req.user;
     }
 
-    next();
+    next(); // call Next middleware : Most Imp
 }
 
 
-
+// export this startegy
 module.exports = passport;

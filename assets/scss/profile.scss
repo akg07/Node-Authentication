@@ -1,3 +1,6 @@
+// This scss file is written by Aayush Kumar Gupta
+
+// profile container
 .profile-container{
     width: 90%;
     margin: 20px auto;
@@ -6,16 +9,19 @@
     display: flex;
     justify-content: space-between;
 
+    // heading
     .heading{
         display: flex;
         flex-direction: column;
         padding: 5px;
 
+        // user name 
         .name{
             font-size: 50px;
             font-weight: 500;
         }
 
+        // user email
         .email{
             font-size: 25px;
             font-weight: 500;
@@ -25,13 +31,15 @@
         }
     }
 
+    // button container
     .btn-container{
-        padding: 10px;
+        padding: 10px 5px;
         display: flex;
         flex-direction: row;
-        width: 20%;
-        justify-content: space-between;
+        width: 30%;
+        justify-content: end;
 
+        // common styles for all buttons
         .btn{
 
             a{
@@ -41,14 +49,20 @@
                 border-radius: 5px;
             }
         }
-
+        
+        // specific - home btn
         .btn-home a{
             background-color: rgb(33, 33, 203);
         }
 
+        // specific - update password btn
         .btn-u-pass a{
             background-color: rgb(198, 133, 28);
         }
-        
+
+        // specific - Sign out btn
+        .btn-signout a{
+            background-color: red;
+        }
     }
 }

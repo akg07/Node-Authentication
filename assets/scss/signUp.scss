@@ -1,3 +1,6 @@
+// This scss file is written by Aayush Kumar Gupta
+
+// Sign Up page
 #signup_page{
     margin: 4% auto;
     width: 80%;
@@ -10,10 +13,12 @@
     justify-content: space-between;
     box-shadow: 0 0 20px 6px #090b6f85;
 
+    //left and right sections
     div{
         height: auto;
     }
 
+    // left section
     .left {
         padding: 40px;
         overflow: hidden;
@@ -22,16 +27,12 @@
         display: flex;
         flex-direction: column;
 
+        //heading
         h5{
             font-size: 50px;
         }
-        
 
-        p {
-            font-size: 14px;
-            color: #767778;
-        }
-
+        // form info inputs
         input {
             width: 100%;
             padding: 10px;
@@ -42,17 +43,7 @@
             border-bottom: 2px solid #B0B3B9;
         }
 
-        .forget-password {
-            display: flex;
-            justify-content: flex-end;
-            align-items: center;
-
-            a{
-                text-decoration: none;
-                color: #767778;
-            }
-        }
-
+        // signUP button
         .signup-btn {
             // float: right;
             // width: auto;
@@ -67,6 +58,7 @@
             background-image: linear-gradient(135deg, #cd70f5 10%, #e8248f 100%);
         }
 
+        // social Auth button
         .social-signup-btn{
 
             p{
@@ -93,6 +85,7 @@
             }
         }
 
+        // GOTO Login btn
         .login-btn{
             margin-top: 20px;
             margin-right: 15px;
@@ -112,6 +105,7 @@
         }
     }
 
+    // Right Section  - SignUP Overview
     .right{
         color: #FFFFFF;
         background-size: cover;
@@ -119,6 +113,7 @@
         overflow: hidden;
         width: 70%;
         
+        // Main Content
         .overlay{
             padding: 30px;
             width: 100%;
@@ -127,12 +122,18 @@
             overflow: hidden;
             box-sizing: border-box;
 
+            // heading
             h1 {
                 font-size: 7vmax;
                 line-height: 1;
                 font-weight: 900;
                 margin-top: 40px;
                 margin-bottom: 20px;
+            }
+
+            // paragraph
+            p{
+                text-align: justify;
             }
 
         }

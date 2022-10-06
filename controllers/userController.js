@@ -1,5 +1,7 @@
 const User = require('../model/user');
 
+// ********************************* Render Profile Page ****************************************************************
+
 module.exports.render_profile_page = async function(req, res) {
     try{
         console.log('User Controller: At ASYNC ');
