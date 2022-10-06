@@ -1,19 +1,20 @@
-const User = require('../model/user');
-const UserAT = require('../model/userAccessToken');
-const crypto = require('crypto');
-const passwordMailer = require('../mailers/reset_pass_mailer');
-const mongoose = require('mongoose');
-require('mongoose-long')(mongoose);
-const {Types: {Long}} = mongoose;
+const User = require('../model/user'); // get User document instance
+const UserAT = require('../model/userAccessToken'); // get User with access token instance
+const crypto = require('crypto'); // get crypto instance
+const passwordMailer = require('../mailers/reset_pass_mailer'); // get nodemailer config
 
-module.exports.render_reset_pass_page = function(req, res) {
-    // if(req.isAuthenticated()) {
-    //     return res.redirect('/users/profile');
-    // }
+/* *****************************************************************************************************
+    these libraries is being used for getting long datatype 
+    this long datatype is being used in creating encrypted password 
+***************************************************************************************************** 
+const mongoose = require('mongoose'); // get mongoose instance
+require('mongoose-long')(mongoose); // require mongoose-long
+const {Types: {Long}} = mongoose; // get Long datatype for mongodb
+*/
 
-    return res.render('reset_password_page');
-}
-
+/* *****************************************************************************************************
+    Render login page on req
+***************************************************************************************************** */
 module.exports.render_login_page = function(req, res) {
     
     // if user is signed in don't show login page
@@ -24,19 +25,22 @@ module.exports.render_login_page = function(req, res) {
     return res.render('login');
 }
 
+/* *****************************************************************************************************
+    render signup page on req
+***************************************************************************************************** */
 module.exports.render_signup_page = function(req, res) {
     // if user is signed in don't show signup page
     if(req.isAuthenticated()) {
         return res.redirect('/home');
     }
-    
-    // console.log(req.cookies);
-    // res.cookie('user_id', 25);
 
     return res.render('signUp');
 }
 
-// sign up new user
+
+/* *****************************************************************************************************
+    feature signup : create a new user
+***************************************************************************************************** */
 module.exports.create_new_user = async function(req, res) {
 
     console.log(req.body.email);
@@ -48,12 +52,14 @@ module.exports.create_new_user = async function(req, res) {
         let user = await User.findOne({email: req.body.email});
         if(!user) {
 
+            // Create a new user
             let newUser = new User();
 
             newUser.name = req.body.name;
             newUser.email = req.body.email;
             newUser.setPassword(req.body.password);
 
+            //  save this new user
             newUser.save((err, User) => {
                 
                 if(err) {
@@ -70,12 +76,11 @@ module.exports.create_new_user = async function(req, res) {
         }
     }catch(err){
         return res.redirect('back');
-
     }
 
 }
 
-/* 
+/* ******************************************************************************************************
     MANUAL AUTHENTICATION
 
     sign in user - create a session for user
@@ -85,7 +90,7 @@ module.exports.create_new_user = async function(req, res) {
     handle mismatching password 
     handle session creation
     handle user is not found 
-*/
+******************************************************************************************************** */
 module.exports.create_session_mannual_Auth = function(req, res) {
     User.findOne({email: req.body.email}, function(err, user) {
         if(err) {
@@ -109,12 +114,18 @@ module.exports.create_session_mannual_Auth = function(req, res) {
     });
 }
 
+/* *****************************************************************************************************
+    feature login : Create a session using passport authentication
+***************************************************************************************************** */
 module.exports.create_session_passport_Auth = function(req, res) {
     req.flash('success', 'Welcome ');
-
     return res.redirect('/home');
 }
 
+
+/* *****************************************************************************************************
+    feature logout : Logout by destroying session created by passport using express-session
+***************************************************************************************************** */
 module.exports.distroy_session = function(req, res) {
     // logout function has been given to req by passport 
     req.logout(function(err) {
@@ -127,7 +138,16 @@ module.exports.distroy_session = function(req, res) {
     }); 
 }
 
+/* *****************************************************************************************************
+    feature Forgot password : Render ask email on req
+***************************************************************************************************** */
+module.exports.render_reset_pass_page = function(req, res) {
+    return res.render('reset_password_page');
+}
 
+/* *****************************************************************************************************
+    feature forgot password: Generate accesstoken for a user (Unique access token)
+***************************************************************************************************** */
 module.exports.generate_access_token = async function(req, res) {
     try{
         let current_millies = new Date().getTime(); // current time in miliseconds
@@ -145,9 +165,7 @@ module.exports.generate_access_token = async function(req, res) {
             });
 
             userWithAT = await userWithAT.populate('user', 'name email');
-
             passwordMailer.resetPassword(userWithAT);
-
             return res.render('reset_pass_link_sent');
         }
 
@@ -156,6 +174,9 @@ module.exports.generate_access_token = async function(req, res) {
     }
 }
 
+/* *****************************************************************************************************
+    feature forgot password: Verify accesstoken using mongoDB document
+***************************************************************************************************** */
 module.exports.verifyAccessToken = async function(req, res) {
     try{
         let current_millies = new Date().getTime();
@@ -176,9 +197,7 @@ module.exports.verifyAccessToken = async function(req, res) {
         }
 
         let user_id = userWithAT.user;
-
         let user = await User.findById(user_id);
-
         if(user) {
             return res.render('update_password', {user: user, userWithAT: userWithAT});
         }
@@ -190,6 +209,9 @@ module.exports.verifyAccessToken = async function(req, res) {
     }
 }
 
+/* *****************************************************************************************************
+    feature forgot password: Update  using link send to user (unique link)
+***************************************************************************************************** */
 module.exports.update_password = async function(req, res) {
 
     console.log('email', req.body.email);
@@ -218,13 +240,17 @@ module.exports.update_password = async function(req, res) {
     }
 }
 
+/* *****************************************************************************************************
+    feature Change password : Render ask password page: purpose-> ask password to re-verify user
+***************************************************************************************************** */
 module.exports.render_password_page = function(req, res) {
     res.render('ask_password');
 }
 
+/* *****************************************************************************************************
+    feature change password : check if password is correct or not
+***************************************************************************************************** */
 module.exports.verify_user = function(req, res) {
-    
-
     User.findOne({email: req.body.email}, function(err, user) {
         if(err) {
             console.log('error at finding user in verify user: ', err);
