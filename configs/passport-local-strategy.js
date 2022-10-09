@@ -5,6 +5,8 @@
 const passport = require('passport'); // get instance of passport
 const LocalStrategy = require('passport-local').Strategy; // local-auth startegy
 const User = require('../model/user'); // User schema
+const fetch = require('isomorphic-fetch');
+const keys = require('./app_keys');
 
 
 // Authentication using passport
@@ -13,19 +15,50 @@ passport.use(new LocalStrategy({
         passReqToCallback: true
     }, function(req, email, password, done) {
 
-        // find the user and establish connection
-        User.findOne({email: email}, function(err, user) {
-            if(err) {
-                req.flash('error', 'Internal Server Error')
-                return done(err);
-            }
+        // getting site key from client side
+        const response_key = req.body["g-recaptcha-response"];
 
-            if(!user || user.notMatch(password)) {
-                req.flash('error', 'Invalid user / password')
-                return done(null, false); // there is no error but user is not found -> false
-            }
+        // Put secret key here, which we get from google console
+        const secret_key = keys.key_values.re_captcha_secret_key;
 
-            return done(null, user); // there is no error but user is found
+        // Hitting POST request to the URL, Google will
+        // respond with success or error scenario.
+        const url =`https://www.google.com/recaptcha/api/siteverify?secret=${secret_key}&response=${response_key}`;
+
+        // Making POST request to verify captcha
+        fetch(url, {
+            method: "post",
+        })
+        .then((response) => response.json())
+        .then((google_response) => {
+            // google_response is the object return by
+            // google as a response
+            if (google_response.success == true) {
+                //   if captcha is verified
+                // find the user and establish connection
+                User.findOne({email: email}, function(err, user) {
+                    if(err) {
+                        req.flash('error', 'Internal Server Error')
+                        return done(err);
+                    }
+
+                    if(!user || user.notMatch(password)) {
+                        req.flash('error', 'Invalid user / password')
+                        return done(null, false); // there is no error but user is not found -> false
+                    }
+
+                    return done(null, user); // there is no error but user is found
+                });
+            } else {
+                // if captcha is not verified
+                req.flash('error', 'Please Verify captcha')
+                return done(null, false);
+            }
+        })
+        .catch((error) => {
+            // Some error while verify captcha
+            console.log('error at captcha -> ', error);
+            return done(null, false);
         });
     }
 ));
