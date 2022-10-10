@@ -1,3 +1,4 @@
+<a name="readme-top"></a>
 <!-- [![Contributors][contributors-shield]][contributors-url]
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
@@ -186,17 +187,16 @@ commands
     * Add this screte-key in config/app_keys.js file
 
 5. Create an app password for this application to use nodemailer, Steps are
-    * Sign In Via Email
+    * Sign In to google
     * Click on manage your google account
     * Click on Security
     * Go to Signing in to Google section
     * Create a new App password
-    * Add this newly created password and your email Id as username in config/app_keys.js file
+    * A new encrypted password will be generated use this password and your email Id as username in config/app_keys.js file
 
 6. Now all configurations has been completed, run below command in terminal to run the application
     ```
     npm start
-    // application will start at localhost:8080/home
     ```
 7. On browser write URL <b>localhost:8080/home</b>
 
@@ -220,7 +220,7 @@ Project Link: [https://github.com/akg07/Node-Authentication](https://github.com/
 ## Acknowledgments
 
 
-* [Choose an Open Source License](https://choosealicense.com)
+* [Open Source License](https://choosealicense.com)
 * [Coding Ninjas](https://www.codingninjas.com/)
 * [Geeks for Geeks](https://www.geeksforgeeks.org/)
 * [Font Awesome](https://fontawesome.com)
