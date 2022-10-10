@@ -2,6 +2,13 @@ const User = require('../model/user'); // get User document instance
 const UserAT = require('../model/userAccessToken'); // get User with access token instance
 const crypto = require('crypto'); // get crypto instance
 const passwordMailer = require('../mailers/reset_pass_mailer'); // get nodemailer config
+const resetPasswordWorker = require('../worker/reset_pass');
+const queue = require('../configs/kue');
+
+const fetch = require('isomorphic-fetch');
+const keys = require('../configs/app_keys');
+
+
 
 /* *****************************************************************************************************
     these libraries is being used for getting long datatype 
@@ -39,40 +46,68 @@ module.exports.render_signup_page = function(req, res) {
 
 /* *****************************************************************************************************
     feature signup : create a new user
-***************************************************************************************************** */
+    ***************************************************************************************************** */
 module.exports.create_new_user = async function(req, res) {
-
-    console.log(req.body.email);
     try{
-        if(req.body.password != req.body.confirm_password) {
-            return res.redirect('back');
-        }
-        
         let user = await User.findOne({email: req.body.email});
-        if(!user) {
 
-            // Create a new user
-            let newUser = new User();
+        // getting site key from client side
+        const response_key = req.body["g-recaptcha-response"];
 
-            newUser.name = req.body.name;
-            newUser.email = req.body.email;
-            newUser.setPassword(req.body.password);
+        // Put secret key here, which we get from google console
+        const secret_key = keys.key_values.re_captcha_secret_key;
 
-            //  save this new user
-            newUser.save((err, User) => {
+        // Hitting POST request to the URL, Google will
+        // respond with success or error scenario.
+        const url =`https://www.google.com/recaptcha/api/siteverify?secret=${secret_key}&response=${response_key}`;
+
+        // Making POST request to verify captcha
+        fetch(url, {
+            method: "post",
+        })
+        .then((response) => response.json())
+        .then((google_response) => {
+            // google_response is the object return by
+            // google as a response
+            if (google_response.success == true) {
+                //   if captcha is verified
                 
-                if(err) {
-                    console.log('error at saving new user ', err);
-                    return res.redirect('back'); 
-                }else {
-                    req.flash('success', 'New User Created');
-                    return res.redirect('/auth/login_page');
+                if(req.body.password != req.body.confirm_password) {
+                    req.flash('error', 'Password does not match');
+                    return res.redirect('back');
                 }
-            });
-        }
-        else {
-            return res.redirect('back');
-        }
+                
+                if(!user) {
+        
+                    // Create a new user
+                    let newUser = new User();
+        
+                    newUser.name = req.body.name;
+                    newUser.email = req.body.email;
+                    newUser.setPassword(req.body.password);
+        
+                    //  save this new user
+                    newUser.save((err, User) => {
+                        
+                        if(err) {
+                            console.log('error at saving new user ', err);
+                            return res.redirect('back'); 
+                        }else {
+                            req.flash('success', 'New User Created');
+                            return res.redirect('/auth/login_page');
+                        }
+                    });
+                }
+                else {
+                    return res.redirect('back');
+                }
+
+            } else {
+                // if captcha is not verified
+                req.flash('error', 'Please Verify captcha')
+                return res.redirect('back');
+            }
+        });
     }catch(err){
         return res.redirect('back');
     }
@@ -164,7 +199,12 @@ module.exports.generate_access_token = async function(req, res) {
             });
 
             userWithAT = await userWithAT.populate('user', 'name email');
-            passwordMailer.resetPassword(userWithAT);
+            
+            // add user with access token to mailer worker
+            queue.create('NodeAuthPassResetEmail', userWithAT).save();
+            console.log('Job Enqueued');
+
+
             return res.render('reset_pass_link_sent');
         }
 
@@ -182,25 +222,30 @@ module.exports.verifyAccessToken = async function(req, res) {
 
         let userWithAT = await UserAT.findOne({accessToken: req.params.id});
 
+        // If User WIth access Token is not available
         if(!userWithAT) {
             return res.render('invalid', {message: 'invalid link'});
         }
 
+        // if user's link is expired (5 min life)
         if(userWithAT.expiresAt < current_millies) {
             await UserAT.findOneAndUpdate({accessToken: req.params.id}, {isValid: false});
             return res.render('invalid', {message: 'Timeout: Link Expired'});
         }
 
+        // if user's link is invalid -> clicked after updating password
         if(!userWithAT.isValid) {
             return res.render('invalid', {message: 'Link Expired'});
         }
 
+        // Everything is good: update password
         let user_id = userWithAT.user;
         let user = await User.findById(user_id);
         if(user) {
             return res.render('update_password', {user: user, userWithAT: userWithAT});
         }
 
+        // if something is not caught return invalid user
         return res.render('invalid', {message: 'Invalid user'});
 
     }catch(err) {
@@ -212,9 +257,6 @@ module.exports.verifyAccessToken = async function(req, res) {
     feature forgot password: Update  using link send to user (unique link)
 ***************************************************************************************************** */
 module.exports.update_password = async function(req, res) {
-
-    console.log('email', req.body.email);
-    console.log('password', req.body.password);
 
     if(req.body.password == req.body.confirm_password) {
 

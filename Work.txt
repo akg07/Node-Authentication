@@ -38,6 +38,8 @@
 ********************************************** write logic for google-auth **********************************************
 - Install passport-google-auth
 - install crypto
+- Register project to Google auth website and get Essential keys
+    - add these keys in config/app_key.js
 - create a strategy config file
 - create a new router.get for google auth
 - link this router to login and signup page
@@ -85,4 +87,20 @@
 - update local-auth-strategy config
 - update auth controller
     - create a new User
-    - update password
+    - update password\
+
+*********************************************************** Enable Re-captcha *******************************************
+- Install isomorphic 0- fetch
+- Generate Secret Key and site key from google.com/recaptcha
+    - add secret key in config/app_key.js
+- add cdn link in layout.ejs
+- add div for g-recaptcha in login.ejs, signup.ejs, and Update_password.ejs
+- add config for 
+    - login -> passport-local-strategy
+    - signUp -> authController
+
+*********************************************************** Add Parallel Job for mailing *******************************************
+- Install Kue
+- Setup config for kue -> config/kue
+- Create Worker
+- add worker in authController where Email need to be sent

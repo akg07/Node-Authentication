@@ -1,5 +1,5 @@
 #signup_page {
-  margin: 4% auto;
+  margin: 5px auto;
   width: 80%;
   background: #FFFFFF;
   border-radius: 10px;
@@ -25,7 +25,7 @@
 }
 
 #signup_page .left h5 {
-  font-size: 50px;
+  font-size: 40px;
 }
 
 #signup_page .left input {

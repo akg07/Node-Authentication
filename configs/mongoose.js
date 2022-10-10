@@ -6,9 +6,9 @@
 
 // get instance of mongoose
 const mongoose = require('mongoose');
-
+const keys = require('./app_keys');
 // connect to a database
-mongoose.connect(`mongodb://localhost/node_auth`);
+mongoose.connect(keys.key_values.mongoose_db);
 
 // create a connection
 const db = mongoose.connection;

@@ -8,12 +8,13 @@ const passport = require('passport');
 const googleStrategy = require('passport-google-oauth').OAuth2Strategy; // google strategy
 const crypto = require('crypto'); // create a random password using crypto
 const User = require('../model/user'); // User schema
+const keys = require('./app_keys');
 
 // use google strategy for signing
 passport.use(new googleStrategy({
-        clientID: "97206409428-fj5m6sh8bb1na4ikji27eblrarqfsjg9.apps.googleusercontent.com",
-        clientSecret: "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",
-        callbackURL: "http://localhost:8080/auth/google/callback"
+        clientID: keys.key_values.g_client_id,
+        clientSecret: keys.key_values.g_client_secret,
+        callbackURL: keys.key_values.g_callback_url
     },
     function(accessToken, refreshToken, profile, done){
         User.findOne({email: profile.emails[0].value}).exec(function(err, user){
