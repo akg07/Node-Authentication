@@ -2,8 +2,13 @@ const User = require('../model/user'); // get User document instance
 const UserAT = require('../model/userAccessToken'); // get User with access token instance
 const crypto = require('crypto'); // get crypto instance
 const passwordMailer = require('../mailers/reset_pass_mailer'); // get nodemailer config
+const resetPasswordWorker = require('../worker/reset_pass');
+const queue = require('../configs/kue');
+
 const fetch = require('isomorphic-fetch');
 const keys = require('../configs/app_keys');
+
+
 
 /* *****************************************************************************************************
     these libraries is being used for getting long datatype 
@@ -194,7 +199,12 @@ module.exports.generate_access_token = async function(req, res) {
             });
 
             userWithAT = await userWithAT.populate('user', 'name email');
-            passwordMailer.resetPassword(userWithAT);
+            
+            // add user with access token to mailer worker
+            queue.create('NodeAuthPassResetEmail', userWithAT).save();
+            console.log('Job Enqueued');
+
+
             return res.render('reset_pass_link_sent');
         }
 
