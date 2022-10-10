@@ -84,19 +84,19 @@ Of course, There are some scope to modify and update the existing feature. I am 
 ### Sample Images
 Here are some sample images of the project. Have a quick look
 
-#####Signup page 
+#### Signup page 
 ![SignUp Page Screen Shot][signup-screenshot]
 
-#####Home page 
+#### Home page 
 ![home Page Screen Shot][home-screenshot]
 
-#####Profile page 
+#### Profile page 
 ![profile Page Screen Shot][profile-screenshot]
 
-#####Re-verify User
+#### Re-verify User
 ![Re-verify Page Screen Shot][Re-verify-screenshot]
 
-#####Update password page 
+#### Update password page 
 ![update password Page Screen Shot][update-password-screenshot]
 
 
