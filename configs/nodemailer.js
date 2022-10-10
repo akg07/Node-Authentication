@@ -7,16 +7,17 @@
 const nodemailer = require('nodemailer');
 const ejs = require('ejs'); // get an instance of ejs -> for Detailed Mail
 const path = require('path'); // get path of the file and folder regardless of the System or OS
+const keys = require('./app_keys');
 
 // Transporter : The GUY who delivers the mail
 let transporter = nodemailer.createTransport({
-    service: 'gmail',
-    host: 'smtp.gmail.com',
-    port: 587,
+    service: keys.key_values.nodemailer_service,
+    host: keys.key_values.nodemailer_host,
+    port: keys.key_values.nodemailer_port,
     secure: false,
     auth: {
-        user: 'ayush3032@gmail.com',
-        pass: 'bozvmjiiabvniqmw'
+        user: keys.key_values.nodemailer_user,
+        pass: keys.key_values.nodemailer_pass
     }
 });
 

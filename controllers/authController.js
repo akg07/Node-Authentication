@@ -222,25 +222,30 @@ module.exports.verifyAccessToken = async function(req, res) {
 
         let userWithAT = await UserAT.findOne({accessToken: req.params.id});
 
+        // If User WIth access Token is not available
         if(!userWithAT) {
             return res.render('invalid', {message: 'invalid link'});
         }
 
+        // if user's link is expired (5 min life)
         if(userWithAT.expiresAt < current_millies) {
             await UserAT.findOneAndUpdate({accessToken: req.params.id}, {isValid: false});
             return res.render('invalid', {message: 'Timeout: Link Expired'});
         }
 
+        // if user's link is invalid -> clicked after updating password
         if(!userWithAT.isValid) {
             return res.render('invalid', {message: 'Link Expired'});
         }
 
+        // Everything is good: update password
         let user_id = userWithAT.user;
         let user = await User.findById(user_id);
         if(user) {
             return res.render('update_password', {user: user, userWithAT: userWithAT});
         }
 
+        // if something is not caught return invalid user
         return res.render('invalid', {message: 'Invalid user'});
 
     }catch(err) {
@@ -252,9 +257,6 @@ module.exports.verifyAccessToken = async function(req, res) {
     feature forgot password: Update  using link send to user (unique link)
 ***************************************************************************************************** */
 module.exports.update_password = async function(req, res) {
-
-    console.log('email', req.body.email);
-    console.log('password', req.body.password);
 
     if(req.body.password == req.body.confirm_password) {
 
