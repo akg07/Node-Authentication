@@ -221,7 +221,6 @@ Project Link: [https://github.com/akg07/Node-Authentication](https://github.com/
 
 
 * [Open Source License](https://choosealicense.com)
-* [Coding Ninjas](https://www.codingninjas.com/)
 * [Geeks for Geeks](https://www.geeksforgeeks.org/)
 * [Font Awesome](https://fontawesome.com)
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
